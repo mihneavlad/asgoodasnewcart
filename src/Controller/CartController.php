@@ -58,7 +58,11 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('Cart not found.');
         }
 
-        $item = $this->cartService->addItem($cart, $request->sku, $request->quantity);
+        try {
+            $item = $this->cartService->addItem($cart, $request->sku, $request->quantity);
+        } catch (\InvalidArgumentException $e) {
+            throw $this->createNotFoundException($e->getMessage());
+        }
 
         return $this->json($this->serializeItem($item), Response::HTTP_CREATED);
     }
