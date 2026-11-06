@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "Shopping Cart API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "cartId",
+      "value": ""
+    },
+    {
+      "key": "itemId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('cartId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/carts",
+        "description": "Creates a new cart and saves the cart ID automatically."
+      }
+    },
+    {
+      "name": "Show Cart",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/carts/{{cartId}}"
+      }
+    },
+    {
+      "name": "Add Item to Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('itemId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/carts/{{cartId}}/items",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sku\": \"AGAN0001\",\n  \"quantity\": 2\n}"
+        },
+        "description": "Available SKUs: AGAN0001 to AGAN0008"
+      }
+    },
+    {
+      "name": "Update Item Quantity",
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/carts/{{cartId}}/items/{{itemId}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 5\n}"
+        }
+      }
+    },
+    {
+      "name": "Remove Item from Cart",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/carts/{{cartId}}/items/{{itemId}}"
+      }
+    }
+  ]
+}
