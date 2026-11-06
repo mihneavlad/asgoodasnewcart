@@ -46,10 +46,8 @@ class Cart
 
     public function addItem(CartItem $item): void
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setCart($this);
-        }
+        $this->items->add($item);
+        $item->setCart($this);
     }
 
     public function removeItem(CartItem $item): void
