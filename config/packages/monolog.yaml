@@ -1,0 +1,5 @@
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: null

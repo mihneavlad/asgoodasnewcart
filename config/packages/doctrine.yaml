@@ -28,7 +28,7 @@ doctrine:
 when@test:
     doctrine:
         dbal:
-            url: 'sqlite:///:memory:'
+            url: 'sqlite:///%kernel.project_dir%/var/data_test.db'
 
 when@prod:
     doctrine:

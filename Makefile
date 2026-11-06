@@ -12,4 +12,4 @@ migrate:
 	php bin/console doctrine:migrations:migrate --no-interaction
 
 test:
-	php bin/phpunit
+	php bin/phpunit --testdox
