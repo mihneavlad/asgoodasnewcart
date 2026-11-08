@@ -37,6 +37,7 @@ class CartControllerTest extends WebTestCase
     private function createCart(): array
     {
         $this->client->request('POST', '/carts');
+        $this->assertResponseStatusCodeSame(201);
 
         return \json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }
@@ -47,6 +48,7 @@ class CartControllerTest extends WebTestCase
             'sku' => $sku,
             'quantity' => $quantity,
         ], JSON_THROW_ON_ERROR));
+        $this->assertResponseStatusCodeSame(201);
         $item = \json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         return $item['id'];
