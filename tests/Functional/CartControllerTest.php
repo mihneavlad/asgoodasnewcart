@@ -107,4 +107,11 @@ class CartControllerTest extends WebTestCase
         $this->assertSame([], $cart['items']);
         $this->assertSame(0, $cart['total']);
     }
+
+    public function testGetNonExistentCartIdReturns404(): void
+    {
+        $this->client->request('GET', '/carts/1947');
+
+        $this->assertResponseStatusCodeSame(404);
+    }
 }
