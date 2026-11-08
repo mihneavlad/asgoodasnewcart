@@ -115,4 +115,54 @@ class CartControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(404);
     }
+
+    public function testAddItemWithUnknownSkuReturns404(): void
+    {
+        $cartId = $this->createCart()['id'];
+
+        $this->client->request('POST', "/carts/{$cartId}/items", server: ['CONTENT_TYPE' => 'application/json'], content: \json_encode([
+            'sku' => 'UNKNOWN-SKU',
+            'quantity' => 1,
+        ], JSON_THROW_ON_ERROR));
+
+        $this->assertResponseStatusCodeSame(404);
+    }
+
+    public function testAddItemWithInvalidDataReturns422(): void
+    {
+        $cartId = $this->createCart()['id'];
+
+        $this->client->request('POST', "/carts/{$cartId}/items", server: ['CONTENT_TYPE' => 'application/json'], content: \json_encode([
+            'sku' => '',
+            'quantity' => -1,
+        ], JSON_THROW_ON_ERROR));
+
+        $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testAddSameSkuTwiceIncrementsQuantity(): void
+    {
+        $cartId = $this->createCart()['id'];
+
+        $this->addItem($cartId, 'AGAN0001', 2);
+        $this->addItem($cartId, 'AGAN0001', 3);
+
+        $this->client->request('GET', "/carts/{$cartId}");
+        $cart = \json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertCount(1, $cart['items']);
+        $this->assertSame(5, $cart['items'][0]['quantity']);
+    }
+
+    public function testUpdateItemWithInvalidQuantityReturns422(): void
+    {
+        $cartId = $this->createCart()['id'];
+        $itemId = $this->addItem($cartId, 'AGAN0001', 1);
+
+        $this->client->request('PATCH', "/carts/{$cartId}/items/{$itemId}", server: ['CONTENT_TYPE' => 'application/json'], content: \json_encode([
+            'quantity' => 0,
+        ], JSON_THROW_ON_ERROR));
+
+        $this->assertResponseStatusCodeSame(422);
+    }
 }
