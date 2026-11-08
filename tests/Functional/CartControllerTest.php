@@ -189,4 +189,23 @@ class CartControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(404);
     }
+
+    public function testAddItemWithEmptyBodyReturns422(): void
+    {
+        $cartId = $this->createCart()['id'];
+
+        $this->client->request('POST', "/carts/{$cartId}/items", server: ['CONTENT_TYPE' => 'application/json'], content: '{}');
+
+        $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testAddItemToNonExistentCartReturns404(): void
+    {
+        $this->client->request('POST', '/carts/1947/items', server: ['CONTENT_TYPE' => 'application/json'], content: \json_encode([
+            'sku' => 'AGAN0001',
+            'quantity' => 1,
+        ], JSON_THROW_ON_ERROR));
+
+        $this->assertResponseStatusCodeSame(404);
+    }
 }
