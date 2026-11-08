@@ -30,6 +30,12 @@ make run
 
 The API will be available at `http://localhost:8000`.
 
+To suppress stack traces in error responses, create a `.env.local` file in the project root:
+
+```
+APP_DEBUG=false
+```
+
 ## Seeded products
 
 The fixture loads 8 electronics products:
