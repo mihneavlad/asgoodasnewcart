@@ -165,4 +165,28 @@ class CartControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(422);
     }
+
+    public function testUpdateItemFromAnotherCartReturns404(): void
+    {
+        $cartId1 = $this->createCart()['id'];
+        $cartId2 = $this->createCart()['id'];
+        $itemId = $this->addItem($cartId1, 'AGAN0001', 1);
+
+        $this->client->request('PATCH', "/carts/{$cartId2}/items/{$itemId}", server: ['CONTENT_TYPE' => 'application/json'], content: \json_encode([
+            'quantity' => 5,
+        ], JSON_THROW_ON_ERROR));
+
+        $this->assertResponseStatusCodeSame(404);
+    }
+
+    public function testDeleteItemFromAnotherCartReturns404(): void
+    {
+        $cartId1 = $this->createCart()['id'];
+        $cartId2 = $this->createCart()['id'];
+        $itemId = $this->addItem($cartId1, 'AGAN0001', 1);
+
+        $this->client->request('DELETE', "/carts/{$cartId2}/items/{$itemId}");
+
+        $this->assertResponseStatusCodeSame(404);
+    }
 }
