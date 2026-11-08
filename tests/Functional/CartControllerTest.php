@@ -34,12 +34,11 @@ class CartControllerTest extends WebTestCase
         $this->em->flush();
     }
 
-    private function createCart(): int
+    private function createCart(): array
     {
         $this->client->request('POST', '/carts');
-        $cart = \json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        return $cart['id'];
+        return \json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function addItem(int $cartId, string $sku, int $quantity): int
